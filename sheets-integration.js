@@ -319,8 +319,18 @@ function renderEvents(data) {
     // Escape check to ensure we don't crash on missing optional fields
     const title = event['タイトル'] || 'No Title';
 
-    // Check multiple possible column names for the image
-    const image = event['画像ファイル名'] || event['画像'] || event['Image'] || event['image'] || '';
+    // Fuzzy search for image column
+    let image = '';
+    const keys = Object.keys(event);
+    for (const key of keys) {
+      // Check for keywords: 画像, image, file, img, picture, photo
+      if (/画像|image|file|img|pic|photo/i.test(key)) {
+        if (event[key] && event[key].trim() !== '') {
+          image = event[key].trim();
+          break;
+        }
+      }
+    }
 
     const date = event['日程'] || '';
     const time = event['時間'] || '';
