@@ -10,7 +10,8 @@ const SHEETS = {
   COMPANY: '会社情報',
   INSTRUCTORS: 'レッスン講師',
   SCHEDULE: '年間スケジュール',
-  MEMBERS: '所属生情報'
+  MEMBERS: '所属生情報',
+  EVENTS: 'イベント情報'
 };
 
 // Load data from Google Sheets on page load
@@ -27,23 +28,44 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadGoogleSheetsData() {
   try {
     // Prevent flicker by hiding containers until data is loaded
-    const containers = ['#schedule .timeline', '#instructors .card-grid', '#members .container'];
+    const containers = ['#schedule .timeline', '#instructors .card-grid', '#members .container', '#events .card-grid'];
     containers.forEach(selector => {
       const el = document.querySelector(selector);
       if (el) el.style.opacity = '0';
     });
 
     // Load all sheets concurrently
-    const [instructors, schedule, members] = await Promise.all([
+    const [instructors, schedule, members, events] = await Promise.all([
       fetchSheetData(SHEETS.INSTRUCTORS),
       fetchSheetData(SHEETS.SCHEDULE),
-      fetchSheetData(SHEETS.MEMBERS)
+      fetchSheetData(SHEETS.MEMBERS),
+      fetchSheetData(SHEETS.EVENTS)
     ]);
 
     // Render data to page
-    if (instructors) renderInstructors(instructors);
-    if (schedule) renderSchedule(schedule);
-    if (members) renderMembers(members);
+    if (instructors) {
+      renderInstructors(instructors);
+    } else {
+      document.querySelector('#instructors .card-grid').style.opacity = '1';
+    }
+
+    if (schedule) {
+      renderSchedule(schedule);
+    } else {
+      document.querySelector('#schedule .timeline').style.opacity = '1';
+    }
+
+    if (members) {
+      renderMembers(members);
+    } else {
+      document.querySelector('#members .container').style.opacity = '1';
+    }
+
+    if (events) {
+      renderEvents(events);
+    } else {
+      document.querySelector('#events .card-grid').style.opacity = '1';
+    }
 
     console.log('✅ Google Sheets data loaded successfully');
   } catch (error) {
@@ -271,6 +293,56 @@ function renderMembers(data) {
       </div>
     `;
   }
+
+  container.innerHTML = html;
+  container.style.opacity = '1';
+  container.style.transition = 'opacity 0.3s ease';
+}
+
+/**
+ * Render events section
+ */
+function renderEvents(data) {
+  const container = document.querySelector('#events .card-grid');
+  if (!container || !data || data.length === 0) return;
+
+  // Sort by display order if available, otherwise keep default
+  data.sort((a, b) => {
+    const orderA = a['表示順'] ? parseInt(a['表示順']) : 999;
+    const orderB = b['表示順'] ? parseInt(b['表示順']) : 999;
+    return orderA - orderB;
+  });
+
+  const html = data.map(event => {
+    // Escape check to ensure we don't crash on missing optional fields
+    const title = event['タイトル'] || 'No Title';
+    const image = event['画像ファイル名'] || ''; // Fallback image could be added here
+    const date = event['日程'] || '';
+    const time = event['時間'] || '';
+    const venue = event['会場'] || '';
+    const address = event['住所'] || '';
+    const fee = event['会費'] || '';
+    const description = event['説明'] || '';
+
+    // Build the image tag only if image exists
+    const imageHtml = image ? `<img src="${image}" alt="${title}" class="card-image">` : '';
+
+    return `
+      <div class="card">
+        ${imageHtml}
+        <h3 class="card-title">${title}</h3>
+        <p class="card-text">
+          ${date ? `<strong>日程:</strong> ${date}<br>` : ''}
+          ${time ? `<strong>時間:</strong> ${time}<br>` : ''}
+          ${venue ? `<strong>会場:</strong> ${venue}<br>` : ''}
+          ${address ? `${address}<br>` : ''}
+          ${fee ? `<strong>会費:</strong> ${fee}<br>` : ''}
+          ${(date || time || venue || fee) ? '<br>' : ''}
+          ${description.replace(/\n/g, '<br>')}
+        </p>
+      </div>
+    `;
+  }).join('');
 
   container.innerHTML = html;
   container.style.opacity = '1';
