@@ -61,7 +61,7 @@ async function loadGoogleSheetsData() {
       document.querySelector('#members .container').style.opacity = '1';
     }
 
-    if (events) {
+    if (events && events.length > 0) {
       renderEvents(events);
     } else {
       document.querySelector('#events .card-grid').style.opacity = '1';
