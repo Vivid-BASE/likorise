@@ -201,9 +201,25 @@ function initMobileMenu() {
   const navMenu = document.querySelector('.nav-menu');
 
   if (navToggle) {
-    navToggle.addEventListener('click', () => {
+    // Handle both click and touchstart for better responsiveness
+    const toggleMenu = (e) => {
+      // Prevent double-firing if both events trigger
+      if (e.type === 'touchstart') e.preventDefault();
+
       navMenu.classList.toggle('active');
       navToggle.classList.toggle('active');
+    };
+
+    navToggle.addEventListener('click', toggleMenu);
+    navToggle.addEventListener('touchstart', toggleMenu, { passive: false });
+
+    // Close menu when clicking a link
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        navToggle.classList.remove('active');
+      });
     });
   }
 }
@@ -259,7 +275,7 @@ function debounce(func, wait) {
 function openModal(imageSrc) {
   const modal = document.getElementById('image-modal');
   const modalImg = document.getElementById('modal-image');
-  
+
   if (modal && modalImg) {
     modal.style.display = 'block';
     modalImg.src = imageSrc;

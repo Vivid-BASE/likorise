@@ -604,12 +604,32 @@ p {
   .nav-menu.active {
     transform: translateY(0);
     opacity: 1;
+    pointer-events: auto;
+    /* Ensure clickable when active */
   }
 
   .nav-toggle {
     display: flex;
+    /* Ensure it's visible on mobile */
+    z-index: 1001;
+    /* Ensure above menu */
+    cursor: pointer;
   }
 
+  /* Hamburger Animation */
+  .nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+  }
+
+  .nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(5px, -6px);
+  }
+
+  /* Reset timeline positions for mobile */
   .timeline::before {
     left: 20px;
   }
