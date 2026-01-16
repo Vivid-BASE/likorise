@@ -91,7 +91,7 @@ function parseCSV(csvText) {
  */
 function renderInstructors(data) {
   const container = document.querySelector('#instructors .card-grid');
-  if (!container) return;
+  if (!container || !data || data.length === 0) return;
 
   // Sort by display order
   data.sort((a, b) => parseInt(a['表示順']) - parseInt(b['表示順']));
@@ -112,7 +112,7 @@ function renderInstructors(data) {
  */
 function renderSchedule(data) {
   const container = document.querySelector('#schedule .timeline');
-  if (!container) return;
+  if (!container || !data || data.length === 0) return;
 
   // Sort by display order
   data.sort((a, b) => parseInt(a['表示順']) - parseInt(b['表示順']));
@@ -133,7 +133,7 @@ function renderSchedule(data) {
  */
 function renderMembers(data) {
   const container = document.querySelector('#members .container');
-  if (!container || data.length < 2) return;
+  if (!container || !data || data.length < 2) return;
 
   const crewData = data.find(item => item['カテゴリ'] === 'CREW');
   const ambassadorData = data.find(item => item['カテゴリ'] === 'AMBASSADOR');
