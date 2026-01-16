@@ -321,7 +321,7 @@ function renderEvents(data) {
     const time = event['時間'] || '';
     const venue = event['会場'] || '';
     const address = event['住所'] || '';
-    const fee = event['会費'] || '';
+    const fee = event['料金'] || ''; // Changed from 会費 to 料金
     const description = event['説明'] || '';
 
     // Build the image tag only if image exists
@@ -336,7 +336,7 @@ function renderEvents(data) {
           ${time ? `<strong>時間:</strong> ${time}<br>` : ''}
           ${venue ? `<strong>会場:</strong> ${venue}<br>` : ''}
           ${address ? `${address}<br>` : ''}
-          ${fee ? `<strong>会費:</strong> ${fee}<br>` : ''}
+          ${fee ? `<strong>料金:</strong> ${fee}<br>` : ''}
           ${(date || time || venue || fee) ? '<br>' : ''}
           ${description.replace(/\n/g, '<br>')}
         </p>
