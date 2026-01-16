@@ -179,8 +179,8 @@ function renderInstructors(data) {
     const category = instructor['カテゴリ'] ? instructor['カテゴリ'].trim() : '';
     const style = lessonStyles[category] || { icon: '✨', title: category, color: 'var(--primary-salmon)', nameColor: 'var(--primary-salmon)' };
 
-    // Check for optional columns (English name and Description)
-    const englishName = instructor['英語名'] || '';
+    // Check for optional columns (Furigana and Description)
+    const furigana = instructor['ふりがな'] || '';
     const description = instructor['説明'] || '';
 
     return `
@@ -195,7 +195,7 @@ function renderInstructors(data) {
         
         <p class="card-text">
           <strong style="font-size: 1.2rem; color: ${style.nameColor};">${instructor['名前']}</strong><br>
-          ${englishName ? `<span style="color: var(--text-light);">${englishName}</span><br><br>` : '<br>'}
+          ${furigana ? `<span style="color: var(--text-light);">${furigana}</span><br><br>` : '<br>'}
           ${description ? description.replace(/\n/g, '<br>') : ''}
         </p>
       </div>
