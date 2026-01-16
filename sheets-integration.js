@@ -254,7 +254,7 @@ function renderMembers(data) {
       <div style="margin-bottom: var(--spacing-xl);">
         <h3 style="text-align: center; font-size: 2rem; margin-bottom: var(--spacing-md); color: var(--primary-salmon);">CREW</h3>
         <div style="background: white; padding: var(--spacing-md); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
-          <p style="text-align: left; color: var(--text-secondary); line-height: 1.8;">${description}</p>
+          <p style="text-align: center; color: var(--text-secondary); line-height: 1.8;">${description}</p>
         </div>
       </div>
     `;
