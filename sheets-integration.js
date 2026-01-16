@@ -131,15 +131,33 @@ function renderInstructors(data) {
   // Sort by display order
   data.sort((a, b) => parseInt(a['表示順']) - parseInt(b['表示順']));
 
-  container.innerHTML = data.map(instructor => `
-    <div class="card">
-      <div style="width: 120px; height: 120px; margin: 0 auto var(--spacing-sm); border-radius: 50%; overflow: hidden; box-shadow: var(--shadow-md);">
-        <img src="${instructor['画像ファイル名']}" alt="${instructor['名前']}" style="width: 100%; height: 100%; object-fit: cover;">
+  // Map lesson categories to icons and colors
+  const lessonStyles = {
+    'お芝居Lesson': { icon: '🎭', title: 'お芝居', color: 'var(--primary-peach)' },
+    'アテレコLesson': { icon: '🎤', title: 'アテレコ', color: 'var(--secondary-mint)' },
+    'ダンスLesson [HIPHOP]': { icon: '💃', title: 'ダンス [HIPHOP]', color: 'var(--primary-salmon)' },
+    'ダンスLesson [JAZZ]': { icon: '🕺', title: 'ダンス [JAZZ]', color: 'var(--secondary-lavender)' }
+  };
+
+  container.innerHTML = data.map(instructor => {
+    const style = lessonStyles[instructor['カテゴリ']] || { icon: '✨', title: instructor['カテゴリ'], color: 'var(--primary-salmon)' };
+
+    return `
+      <div class="card">
+        <div class="lesson-header" style="background: ${style.color};">
+          <h3>${style.icon} ${style.title}</h3>
+        </div>
+        
+        <div style="width: 120px; height: 120px; margin: 0 auto var(--spacing-sm); border-radius: 50%; overflow: hidden; box-shadow: var(--shadow-sm); background-color: white;">
+          <img src="${instructor['画像ファイル名']}" alt="${instructor['名前']}" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        
+        <p class="card-text">
+          <strong style="font-size: 1.2rem; color: var(--primary-salmon);">${instructor['名前']}</strong>
+        </p>
       </div>
-      <h3 style="color: var(--primary-salmon); margin-bottom: var(--spacing-xs);">${instructor['名前']}</h3>
-      <p style="color: var(--text-secondary); font-size: 0.9rem;">${instructor['カテゴリ']}</p>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 /**
