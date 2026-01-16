@@ -252,3 +252,32 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 }
+
+// ===================================
+// Image Modal Logic
+// ===================================
+function openModal(imageSrc) {
+  const modal = document.getElementById('image-modal');
+  const modalImg = document.getElementById('modal-image');
+  
+  if (modal && modalImg) {
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+  }
+}
+
+function closeModal() {
+  const modal = document.getElementById('image-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Restore scrolling
+  }
+}
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeModal();
+  }
+});

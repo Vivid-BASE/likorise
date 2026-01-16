@@ -549,6 +549,12 @@
 
   <script src="script.js"></script>
   <script src="sheets-integration.js?v=2"></script>
+
+  <!-- Image Modal -->
+  <div id="image-modal" class="modal" onclick="if(event.target === this) closeModal()">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modal-image">
+  </div>
 </body>
 
 </html>

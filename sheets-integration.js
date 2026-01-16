@@ -340,7 +340,9 @@ function renderEvents(data) {
     const description = event['説明'] || '';
 
     // Build the image tag only if image exists
-    const imageHtml = image ? `<img src="${image}" alt="${title}" class="card-image">` : '';
+    // Add onclick to open modal and style cursor
+    const imageHtml = image ?
+      `<img src="${image}" alt="${title}" class="card-image" onclick="openModal('${image}')" style="cursor: pointer;">` : '';
 
     return `
       <div class="card">
