@@ -313,10 +313,15 @@ function renderEvents(data) {
     return orderA - orderB;
   });
 
+  console.log('Events Data:', data); // Debug log
+
   const html = data.map(event => {
     // Escape check to ensure we don't crash on missing optional fields
     const title = event['タイトル'] || 'No Title';
-    const image = event['画像ファイル名'] || ''; // Fallback image could be added here
+
+    // Check multiple possible column names for the image
+    const image = event['画像ファイル名'] || event['画像'] || event['Image'] || event['image'] || '';
+
     const date = event['日程'] || '';
     const time = event['時間'] || '';
     const venue = event['会場'] || '';
