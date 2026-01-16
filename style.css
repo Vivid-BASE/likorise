@@ -815,19 +815,53 @@ p {
 
 /* Responsive */
 @media (max-width: 768px) {
+
+  /* Allow horizontal scroll on mobile instead of stacking */
   .org-tree {
     padding: 10px;
+    width: 900px;
+    /* Force minimum width to keep structure */
   }
 
+  /* Keep external positioned relative to the tree, not the screen */
   .area-external {
-    position: static;
-    margin-top: 10px;
+    right: 20px;
+    top: 90px;
   }
 
-  .admin-subs {
-    flex-direction: column;
+  /* Text wrapping improvements */
+  .org-node {
+    word-break: auto-phrase;
+    /* for Chrome 119+ / Japanese */
+    overflow-wrap: break-word;
+    /* standard fallback */
+    white-space: normal;
+    text-align: center;
+    line-height: 1.4;
+    padding: 8px 10px;
+  }
+
+  /* Reduce font size slightly for better fit */
+  .org-ceo {
+    font-size: 1rem;
+    width: 180px;
+  }
+
+  .org-coo {
+    width: 160px;
+  }
+
+  .org-dept {
+    min-width: 120px;
+    font-size: 0.9rem;
+  }
+
+  .org-sub-node {
+    min-width: 80px;
+    font-size: 0.8rem;
   }
 }
+
 /* ===================================
    Image Modal
    =================================== */
@@ -854,7 +888,7 @@ p {
   max-height: 90vh;
   object-fit: contain;
   border-radius: var(--radius-md);
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   animation: zoomIn 0.3s;
 }
 
@@ -878,11 +912,18 @@ p {
 }
 
 @keyframes zoomIn {
-  from {transform:scale(0.8); opacity:0} 
-  to {transform:scale(1); opacity:1}
+  from {
+    transform: scale(0.8);
+    opacity: 0
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1
+  }
 }
 
-@media only screen and (max-width: 700px){
+@media only screen and (max-width: 700px) {
   .modal-content {
     width: 95%;
   }
