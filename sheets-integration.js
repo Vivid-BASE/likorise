@@ -219,7 +219,6 @@ function renderSchedule(data) {
 
   const html = data.map(item => `
     <div class="timeline-item">
-      <div class="timeline-marker"></div>
       <div class="timeline-content">
         <h4>${item['月']} - ${item['タイトル']}</h4>
         <p>${item['説明']}</p>
