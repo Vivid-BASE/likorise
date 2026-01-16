@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 async function loadGoogleSheetsData() {
   try {
+    // Prevent flicker by hiding containers until data is loaded
+    const containers = ['#schedule .timeline', '#instructors .card-grid', '#members .container'];
+    containers.forEach(selector => {
+      const el = document.querySelector(selector);
+      if (el) el.style.opacity = '0';
+    });
+
     // Load all sheets concurrently
     const [instructors, schedule, members] = await Promise.all([
       fetchSheetData(SHEETS.INSTRUCTORS),
@@ -160,16 +167,20 @@ function renderInstructors(data) {
   // Sort by display order
   data.sort((a, b) => parseInt(a['表示順']) - parseInt(b['表示順']));
 
-  // Map lesson categories to icons and colors
+  // Map lesson categories to icons and colors from original design
   const lessonStyles = {
-    'お芝居Lesson': { icon: '🎭', title: 'お芝居', color: 'var(--primary-peach)' },
-    'アテレコLesson': { icon: '🎤', title: 'アテレコ', color: 'var(--secondary-mint)' },
-    'ダンスLesson [HIPHOP]': { icon: '💃', title: 'ダンス [HIPHOP]', color: 'var(--primary-salmon)' },
-    'ダンスLesson [JAZZ]': { icon: '🕺', title: 'ダンス [JAZZ]', color: 'var(--secondary-lavender)' }
+    'お芝居Lesson': { icon: '🎭', title: 'お芝居', color: 'var(--primary-peach)', nameColor: 'var(--primary-salmon)' },
+    'アテレコLesson': { icon: '🎤', title: 'アテレコ', color: 'var(--secondary-mint)', nameColor: 'var(--secondary-sky)' },
+    'ダンスLesson [HIPHOP]': { icon: '💃', title: 'ダンス [HIPHOP]', color: 'var(--accent-gold)', nameColor: 'var(--accent-gold)' },
+    'ダンスLesson [JAZZ]': { icon: '🎵', title: 'ダンス [JAZZ]', color: 'var(--primary-coral)', nameColor: 'var(--primary-coral)' }
   };
 
-  container.innerHTML = data.map(instructor => {
-    const style = lessonStyles[instructor['カテゴリ']] || { icon: '✨', title: instructor['カテゴリ'], color: 'var(--primary-salmon)' };
+  const html = data.map(instructor => {
+    const style = lessonStyles[instructor['カテゴリ']] || { icon: '✨', title: instructor['カテゴリ'], color: 'var(--primary-salmon)', nameColor: 'var(--primary-salmon)' };
+
+    // Check for optional columns (English name and Description)
+    const englishName = instructor['英語名'] || '';
+    const description = instructor['説明'] || '';
 
     return `
       <div class="card">
@@ -182,11 +193,17 @@ function renderInstructors(data) {
         </div>
         
         <p class="card-text">
-          <strong style="font-size: 1.2rem; color: var(--primary-salmon);">${instructor['名前']}</strong>
+          <strong style="font-size: 1.2rem; color: ${style.nameColor};">${instructor['名前']}</strong><br>
+          ${englishName ? `<span style="color: var(--text-light);">${englishName}</span><br><br>` : '<br>'}
+          ${description ? description.replace(/\n/g, '<br>') : ''}
         </p>
       </div>
     `;
   }).join('');
+
+  container.innerHTML = html;
+  container.style.opacity = '1';
+  container.style.transition = 'opacity 0.3s ease';
 }
 
 /**
@@ -199,7 +216,7 @@ function renderSchedule(data) {
   // Sort by display order
   data.sort((a, b) => parseInt(a['表示順']) - parseInt(b['表示順']));
 
-  container.innerHTML = data.map(item => `
+  const html = data.map(item => `
     <div class="timeline-item">
       <div class="timeline-marker"></div>
       <div class="timeline-content">
@@ -208,6 +225,10 @@ function renderSchedule(data) {
       </div>
     </div>
   `).join('');
+
+  container.innerHTML = html;
+  container.style.opacity = '1';
+  container.style.transition = 'opacity 0.3s ease';
 }
 
 /**
@@ -252,4 +273,6 @@ function renderMembers(data) {
   }
 
   container.innerHTML = html;
+  container.style.opacity = '1';
+  container.style.transition = 'opacity 0.3s ease';
 }
