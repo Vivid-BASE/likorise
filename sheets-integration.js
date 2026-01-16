@@ -176,7 +176,8 @@ function renderInstructors(data) {
   };
 
   const html = data.map(instructor => {
-    const style = lessonStyles[instructor['カテゴリ']] || { icon: '✨', title: instructor['カテゴリ'], color: 'var(--primary-salmon)', nameColor: 'var(--primary-salmon)' };
+    const category = instructor['カテゴリ'] ? instructor['カテゴリ'].trim() : '';
+    const style = lessonStyles[category] || { icon: '✨', title: category, color: 'var(--primary-salmon)', nameColor: 'var(--primary-salmon)' };
 
     // Check for optional columns (English name and Description)
     const englishName = instructor['英語名'] || '';

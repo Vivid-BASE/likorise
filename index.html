@@ -7,6 +7,15 @@
   <meta name="description" content="LiKO RISE - Entertainment Production | エンターテイメント制作会社">
   <title>LiKO RISE | Entertainment Production</title>
   <link rel="stylesheet" href="style.css?v=14">
+  <style>
+    /* Prevent flicker of hardcoded content before JS data loads */
+    #schedule .timeline,
+    #instructors .card-grid,
+    #members .container {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  </style>
 </head>
 
 <body>
