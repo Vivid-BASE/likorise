@@ -1,0 +1,44 @@
+# Python scripts
+*.py
+*.pyc
+__pycache__/
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Original/backup images (keep only the ones used in the site)
+ceo_takano.png
+ceo_takano_real.jpg
+instructor_*_real.jpg
+instructor_*_cutout.png
+
+# Generated candidate files
+candidates.html
+
+# UUID named images (keeping only the ones actually referenced in HTML)
+137cc6a1-f99b-4314-8933-59dc82cd4cae.jpeg
+16521f01-1221-4583-99f1-4bc5a8d4512f.jpeg
+1b1e4d0b-76c6-4dde-9a65-33457615a41f.jpeg
+26310661-dfe5-4f11-a734-37b196dc014e.jpeg
+4aaec261-d78b-41a3-aa6c-bf961f35faf3.jpeg
+731fd730-e471-450c-b0e1-291c307a7ba7.jpeg
+8e95c1d3-468a-4143-b47a-6ea5093c9ac4.jpeg
+9136c10f-f6f0-4f94-b213-48bef204eb1c.jpeg
+addcc9c6-0d5e-4cc6-9f83-106812321016.jpeg
+c911907e-f2a1-406f-81d3-569b0bbf6285.jpeg
+e9d4340a-561d-423f-be65-873a1c53c757.jpeg
