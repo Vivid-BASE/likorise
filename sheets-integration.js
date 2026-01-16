@@ -176,22 +176,29 @@ function renderMembers(data) {
   let html = '<h2 class="section-title">所属生情報</h2>';
 
   if (crewData) {
+    // Convert newlines to <br> and format bullet points
+    const description = crewData['説明']
+      .replace(/\n/g, '<br>')
+      .replace(/\* /g, '• ');
+
     html += `
       <div style="margin-bottom: var(--spacing-xl);">
         <h3 style="text-align: center; font-size: 2rem; margin-bottom: var(--spacing-md); color: var(--primary-salmon);">CREW</h3>
         <div style="background: white; padding: var(--spacing-md); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
-          <p style="text-align: center; color: var(--text-secondary);">${crewData['説明']}</p>
+          <p style="text-align: left; color: var(--text-secondary); line-height: 1.8;">${description}</p>
         </div>
       </div>
     `;
   }
 
   if (ambassadorData) {
+    const description = ambassadorData['説明'].replace(/\n/g, '<br>');
+
     html += `
       <div>
         <h3 style="text-align: center; font-size: 2rem; margin-bottom: var(--spacing-md); color: var(--secondary-mint);">AMBASSADOR</h3>
         <div style="background: white; padding: var(--spacing-md); border-radius: var(--radius-lg); box-shadow: var(--shadow-md);">
-          <p style="text-align: center; color: var(--text-secondary);">${ambassadorData['説明']}</p>
+          <p style="text-align: center; color: var(--text-secondary);">${description}</p>
         </div>
       </div>
     `;
