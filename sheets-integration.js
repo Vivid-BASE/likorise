@@ -65,17 +65,52 @@ async function fetchSheetData(sheetName) {
 
 /**
  * Parse CSV text into array of objects
+ * Properly handles quoted fields containing commas
  */
 function parseCSV(csvText) {
   const lines = csvText.split('\n').filter(line => line.trim());
   if (lines.length < 2) return [];
 
-  // Remove quotes from headers and data
-  const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g, '').trim());
+  // Parse a single CSV line respecting quotes
+  const parseLine = (line) => {
+    const result = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          // Escaped quote
+          current += '"';
+          i++; // Skip next quote
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        // Field separator
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+
+    // Add last field
+    result.push(current.trim());
+    return result;
+  };
+
+  // Parse headers
+  const headers = parseLine(lines[0]);
   const data = [];
 
+  // Parse data rows
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(',').map(v => v.replace(/^"|"$/g, '').trim());
+    const values = parseLine(lines[i]);
     const row = {};
     headers.forEach((header, index) => {
       row[header] = values[index] || '';
