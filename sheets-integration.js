@@ -65,55 +65,84 @@ async function fetchSheetData(sheetName) {
 
 /**
  * Parse CSV text into array of objects
- * Properly handles quoted fields containing commas
+ * Properly handles quoted fields containing commas and newlines
  */
 function parseCSV(csvText) {
-  const lines = csvText.split('\n').filter(line => line.trim());
-  if (lines.length < 2) return [];
+  const rows = [];
+  let currentRow = [];
+  let currentField = '';
+  let inQuotes = false;
+  let i = 0;
 
-  // Parse a single CSV line respecting quotes
-  const parseLine = (line) => {
-    const result = [];
-    let current = '';
-    let inQuotes = false;
+  while (i < csvText.length) {
+    const char = csvText[i];
+    const nextChar = csvText[i + 1];
 
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-      const nextChar = line[i + 1];
-
-      if (char === '"') {
-        if (inQuotes && nextChar === '"') {
-          // Escaped quote
-          current += '"';
-          i++; // Skip next quote
-        } else {
-          // Toggle quote state
-          inQuotes = !inQuotes;
-        }
-      } else if (char === ',' && !inQuotes) {
-        // Field separator
-        result.push(current.trim());
-        current = '';
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote (two consecutive quotes)
+        currentField += '"';
+        i += 2;
+        continue;
       } else {
-        current += char;
+        // Toggle quote state
+        inQuotes = !inQuotes;
+        i++;
+        continue;
       }
     }
 
-    // Add last field
-    result.push(current.trim());
-    return result;
-  };
+    if (!inQuotes) {
+      if (char === ',') {
+        // Field separator
+        currentRow.push(currentField.trim());
+        currentField = '';
+        i++;
+        continue;
+      } else if (char === '\n' || char === '\r') {
+        // Row separator
+        if (currentField || currentRow.length > 0) {
+          currentRow.push(currentField.trim());
+          if (currentRow.some(field => field.length > 0)) {
+            rows.push(currentRow);
+          }
+          currentRow = [];
+          currentField = '';
+        }
+        // Skip \r\n combination
+        if (char === '\r' && nextChar === '\n') {
+          i += 2;
+        } else {
+          i++;
+        }
+        continue;
+      }
+    }
 
-  // Parse headers
-  const headers = parseLine(lines[0]);
+    // Regular character
+    currentField += char;
+    i++;
+  }
+
+  // Add last field and row
+  if (currentField || currentRow.length > 0) {
+    currentRow.push(currentField.trim());
+    if (currentRow.some(field => field.length > 0)) {
+      rows.push(currentRow);
+    }
+  }
+
+  if (rows.length < 2) return [];
+
+  // First row is headers
+  const headers = rows[0];
   const data = [];
 
-  // Parse data rows
-  for (let i = 1; i < lines.length; i++) {
-    const values = parseLine(lines[i]);
+  // Convert remaining rows to objects
+  for (let i = 1; i < rows.length; i++) {
     const row = {};
     headers.forEach((header, index) => {
-      row[header] = values[index] || '';
+      row[header] = rows[i][index] || '';
     });
     data.push(row);
   }
